@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import json
 from os import name
 from bs4 import BeautifulSoup
@@ -20,10 +20,10 @@ class Holiday:
     def __str__ (self):
         # String output
         # Holiday output when printed.
-        return self.name+ '(' + self.date + ')'
+        return self.name+ '(' + self.date.strftime('%Y-%m-%d') + ')'
     
     def __repr__ (self):
-        pass 
+        return str(self) 
         
           
            
@@ -35,6 +35,10 @@ class Holiday:
 class HolidayList:
     def __init__(self):
        self.innerHolidays = []
+    
+    def __str__(self):
+        rep = ", ".join([str(x) for x in self.innerHolidays])
+        return rep
    
     def addHoliday(self, holidayObj):
         # Make sure holidayObj is an Holiday Object by checking the type
@@ -44,19 +48,22 @@ class HolidayList:
             self.innerHolidays.append(holidayObj)
             print(holidayObj,' has been added.')
 
-    def findHoliday(HolidayName, Date):
+    def findHoliday(self, HolidayName, HolidayDate):
         # Find Holiday in innerHolidays
         # Return Holiday
-        if HolidayName in HolidayName.innerHolidays:
-            print(HolidayName + Date)
+        holiday = filter(lambda holiday: holiday.name == HolidayName and holiday.date == HolidayDate, self.innerHolidays)
+        print(holiday)
 
-    def removeHoliday(HolidayName, Date):
+    def removeHoliday(self, HolidayName, HolidayDate):
         # Find Holiday in innerHolidays by searching the name and date combination.
         # remove the Holiday from innerHolidays
         # inform user you deleted the holiday
-        if HolidayName in HolidayName.innerHolidays:
-            HolidayName.innerHolidays.remove(HolidayName)
-            print(HolidayName,' has been removed.')
+        holiday = filter(lambda holiday: holiday.name == HolidayName and holiday.date == HolidayDate, self.innerHolidays)
+        if holiday in self.innerHolidays:
+            print((holiday),' has been removed.')
+            del HolidayName
+            del HolidayDate
+            
 
     def read_json(filelocation):
         # Read in things from json file location
@@ -103,7 +110,7 @@ class HolidayList:
         self.innerHolidays.append(holidays)   
 
     def numHolidays():
-        # Return the total number of holidays in innerHolidays
+        Return the total number of holidays in innerHolidays
     
     def filter_holidays_by_week(year, week_number):
         # Use a Lambda function to filter by week number and save this as holidays, use the filter on innerHolidays
@@ -143,6 +150,19 @@ def main():
     # 5. Take user input for their action based on Menu and check the user input for errors
     # 6. Run appropriate method from the HolidayList object depending on what the user input is
     # 7. Ask the User if they would like to Continue, if not, end the while loop, ending the program.  If they do wish to continue, keep the program going. 
+    holidayname = 'Christmas'
+    holidaydate = datetime.strptime('2023-12-25','%Y-%m-%d')
+    holidayname2 = 'Halloween'
+    holidaydate2 = datetime.strptime('2023-10-31','%Y-%m-%d')
+    holiday1 = Holiday(holidayname, holidaydate)
+    holiday2 = Holiday(holidayname2, holidaydate2)
+    holidaylist = HolidayList()
+    holidaylist.addHoliday(holiday1)
+    holidaylist.addHoliday(holiday2)
+    print(holidaylist)
+    holidaylist.removeHoliday(holidayname2,holidaydate2)
+    #Questions: findHoliday only prints out <filter object...> and removeHoliday not printing anything
+
 
 
 if __name__ == "__main__":
